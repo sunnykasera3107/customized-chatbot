@@ -1,0 +1,41 @@
+{
+  "flight_booking": {
+    "keywords": ["flight", "ticket", "book", "airport", "airticket", "travel"],
+    "required_confidence": 0.6,
+    "priority": 1
+  },
+  "weather": {
+    "keywords": ["weather", "temperature", "rain", "condition"],
+    "required_confidence": 0.55,
+    "priority": 2
+  },
+  "greeting": {
+    "keywords": ["hi", "hello", "hey", "how", "you"],
+    "required_confidence": 0.4,
+    "priority": 999
+  },
+  "plant_disease_detector": {
+    "keywords": ["plant", "plants", "leaf", "leaves", "crop", "tree", "garden",
+      "disease", "infection", "fungus", "fungal", "bacteria", "bacterial",
+      "virus", "viral", "pest", "insect", "bug", "infestation",
+      "detect", "detection", "identify", "identification", "diagnose", "diagnosis",
+      "symptom", "spots", "yellowing", "wilting", "dry", "rot", "blight",
+      "mold", "powdery", "rust", "decay",
+      "plant health", "leaf problem", "crop disease", "plant issue",
+      "what disease", "what happened to my plant",
+      "why is my plant dying", "why leaves turning yellow",
+      "plant doctor", "plant check", "plant analysis", "find disease my plant", "find disease in my plant", "find disease", "predict plant disease"],
+    "required_confidence": 0.3,
+    "priority": 3
+  },
+  "add_numbers": {
+    "keywords": ["add numbers", "addition", "sum", "total", "total of numbers"],
+    "required_confidence": 0.2,
+    "priority": 3
+  },
+  "subtract_numbers": {
+    "keywords": ["subtract numbers", "minus", "subtraction", "difference between numbers", "difference"],
+    "required_confidence": 0.2,
+    "priority": 3
+  }
+}

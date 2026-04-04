@@ -1,0 +1,72 @@
+{
+  "flight_booking": {
+    "enabled": 0,
+    "endpoint": "/flight_booking",
+    "class": "FlightBookingTool",
+    "timeout": 5,
+    "responses": {
+      "source": "What will be your departure location?",
+      "destination": "What will be your destination location?",
+      "date": "When do you want to travel?",
+      "default": "Sorry, I cannot help you with this booking. How ever you can try expedia.com or booking.com"
+    }
+  },
+  "greeting": {
+    "enabled": 0,
+    "endpoint": "/greeting",
+    "class": "GreetingTool",
+    "timeout": 1,
+    "responses": {
+      "default": "How can I help you?"
+    }
+  },
+  "weather": {
+    "enabled": 0,
+    "endpoint": "/weather",
+    "class": "WeatherTool",
+    "timeout": 5,
+    "responses": {
+      "location": "For which location you want to know weather?",
+      "default": "I cannot help you with weather forcasting. How ever you can try accuweather.com"
+    }
+  },
+  "informational_query": {
+    "enabled": 0,
+    "responses": {
+      "default": "I do not have much information on this topic for now. I am still learning."
+    }
+  },
+  "learning_query": {
+    "enabled": 0,
+    "responses": {
+      "default": "I do not have much learning material for this for the time."
+    }
+  },
+  "plant_disease_detector": {
+    "enabled": 1,
+    "endpoint": "tools/call",
+    "class": "PlantDiseaseDetector", 
+    "timeout": 5,
+    "response": {
+      "default": "Which plant is this? Can you tell me the name of plant? Because currently I am detecting disease for a number of plants only."
+    }
+  },
+  "add_numbers": {
+    "enabled": 0,
+    "endpoint": "tools/call",
+    "class": "AddNumbers",
+    "timeout": 2,
+    "response": {
+      "default": "Invalid number detail. Tell me numbers comma separated only."
+    }
+  },
+  "subtract_numbers": {
+    "enabled": 0,
+    "endpoint": "tools/call",
+    "class": "SubtractNumbers",
+    "timeout": 2,
+    "response": {
+      "default": "Invalid number detail. Tell me numbers comma separated only."
+    }
+  }
+}

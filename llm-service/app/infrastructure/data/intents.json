@@ -1,0 +1,10 @@
+{
+    "intents": [
+        "greeting",
+        "flight_query",
+        "weather_query",
+        "informational_query",
+        "learning_query",
+        "unknown"
+    ]
+}

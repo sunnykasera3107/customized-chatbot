@@ -1,0 +1,57 @@
+project:
+  name: plant_disease_detection
+  version: 1.0
+
+paths:
+  data:
+    raw: data/raw
+    temp: data/temp
+    test: data/test
+  models:
+    save_dir: saved_models
+  logs:
+    training: models/plant_disease/logs
+
+dataset:
+  ds_name: PlantVillage
+  source: kagglehub
+  name: "emmarex/plantdisease"
+  download: false
+  image_size: [192, 192]
+  batch_size: 32
+  validation_split: 0
+  subset: training
+
+training:
+  epochs: 5
+  optimizer: AdamW
+  loss: sparse_categorical_crossentropy
+  metrics:
+    - accuracy
+
+model:
+  type: cnn
+  input_shape: [192, 192, 3]
+  testing: true
+  building: false
+  architecture:
+    conv_layers: [32, 64]
+    dense_units: 128
+    kernel_size: [3, 3]
+    dropout: 0.3
+    max_pooling: [3, 3]
+
+augmentation:
+  enabled: true
+  rotation: 0.2
+  width_factor: 0.1
+  height_factor: 0.1
+  zoom: 0.2
+  flip: true
+
+logging:
+  level: INFO
+  save_logs: true
+
+cleanup:
+  remove_temp_data: false

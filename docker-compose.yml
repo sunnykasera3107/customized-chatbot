@@ -1,0 +1,65 @@
+services:
+    orchestrator:
+        build: ./orchestrator
+        image: python:3.14.2-slim
+        container_name: orchestrator-service
+        working_dir: /app
+        volumes:
+            - ./orchestrator/app:/app
+        ports:
+            - "${ORCHESTRATOR_PORT}:8000"
+        env_file:
+            - .env
+        command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    
+    extractor:
+        build: ./extractor-service
+        image: python:3.14.2-slim
+        container_name: extractor-service
+        working_dir: /app
+        volumes:
+            - ./extractor-service/app:/app
+        ports:
+            - "${EXTRACTOR_PORT}:8000"
+        env_file:
+            - .env
+        command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    
+    tools:
+        build: ./tool-service
+        image: python:3.13.12
+        container_name: tool-service
+        working_dir: /app
+        volumes:
+            - ./tool-service/app:/app
+        ports:
+            - "${TOOLS_PORT}:8000"
+        env_file:
+            - .env
+        command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+    llm:
+        build: ./llm-service
+        image: python:3.14.2-slim
+        container_name: llm-service
+        working_dir: /app
+        volumes:
+            - ./llm-service/app:/app
+        ports:
+            - "${LLM_PORT}:8000"
+        env_file:
+            - .env
+        command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    
+    ui:
+        build: ./user-interface-service
+        image: python:3.14.2-slim
+        container_name: user-interface-service
+        working_dir: /app
+        volumes:
+            - ./user-interface-service/app:/app
+        ports:
+            - "${UI_PORT}:8000"
+        env_file:
+            - .env
+        command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Assistant</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .chat-container {
+      width: 420px;
+      height: 680px;
+      background: white;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+
+      position: relative; /* 🔥 ADD THIS */
+    }
+
+    .header {
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      color: white;
+      padding: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .chat-box {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      background: #f9f9fb;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .message {
+      margin: 8px 0;
+      padding: 10px 14px;
+      border-radius: 18px;
+      max-width: 75%;
+      font-size: 14px;
+      line-height: 1.4;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    .user {
+      background: #4facfe;
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 5px;
+    }
+
+    .ai {
+      background: #e5e7eb;
+      color: #333;
+      align-self: flex-start;
+      border-bottom-left-radius: 5px;
+    }
+
+    .typing {
+      font-style: italic;
+      opacity: 0.7;
+    }
+
+    .preview-container {
+      padding: 10px;
+      border-top: 1px solid #eee;
+      background: #fafafa;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .preview-container img {
+      max-width: 100%;
+      max-height: 120px;
+      border-radius: 10px;
+      margin-top: 5px;
+    }
+
+    /* Floating thumbnail */
+    .floating-preview {
+      position: absolute;
+      bottom: 70px; /* relative to chat container now */
+      right: 10px;
+
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #ddd;
+      box-shadow: 2px 2px 5px black;
+      background: white;
+
+      display: none;
+      z-index: 10;
+    }
+
+    .floating-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .input-area {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #ddd;
+      background: white;
+      align-items: center;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      outline: none;
+      font-size: 14px;
+    }
+
+    button {
+      margin-left: 6px;
+      padding: 10px 12px;
+      border: none;
+      border-radius: 20px;
+      background: #4facfe;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #2b8df5;
+    }
+
+    .upload-btn {
+      background: #34d399;
+    }
+
+    .upload-btn:hover {
+      background: #10b981;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+  </style>
+</head>
+
+<body>
+
+<div class="chat-container">
+  <div class="header">🌿 AI Assistant</div>
+
+  <div id="chatBox" class="chat-box"></div>
+
+  <!-- Image Preview -->
+  <div id="previewContainer" class="preview-container">
+    <span>📷 Selected Image:</span>
+    <img id="imagePreview" src="" />
+  </div>
+
+  <div id="floatingPreview" class="floating-preview">
+    <img id="floatingImage" src="" />
+  </div>
+
+  <div class="input-area">
+    <input id="userInput" type="text" placeholder="Ask something..." />
+
+    <!-- Upload Button -->
+    <input type="file" id="fileInput" accept="image/*" hidden />
+    <button class="upload-btn" onclick="document.getElementById('fileInput').click()">📎</button>
+
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script>
+  const chatBox = document.getElementById("chatBox");
+  const fileInput = document.getElementById("fileInput");
+  const previewContainer = document.getElementById("previewContainer");
+  const imagePreview = document.getElementById("imagePreview");
+  const floatingPreview = document.getElementById("floatingPreview");
+  const floatingImage = document.getElementById("floatingImage");
+
+  let _messages = [];
+  let selectedFile = null;
+  let uploadedFilePath = null; // 🔥 store uploaded file path
+
+  function addMessage(text, sender, isTyping=false) {
+    const msg = document.createElement("div");
+    msg.classList.add("message", sender);
+    if (isTyping) msg.classList.add("typing");
+    msg.innerText = text;
+    chatBox.appendChild(msg);
+    chatBox.scrollTop = chatBox.scrollHeight;
+    return msg;
+  }
+
+  // 🔹 Handle file selection + upload immediately
+  fileInput.addEventListener("change", async function() {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    selectedFile = file;
+
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const imgSrc = e.target.result;
+
+      // old preview (optional)
+      imagePreview.src = imgSrc;
+      previewContainer.style.display = "flex";
+
+      // 🔥 floating preview
+      floatingImage.src = imgSrc;
+      floatingPreview.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+
+    // 🔥 Upload file to backend
+    const formData = new FormData();
+    formData.append("file", file);
+
+    floatingPreview.addEventListener("click", () => {
+      floatingPreview.style.display = "none";
+      uploadedFilePath = null;
+    });
+
+    try {
+      const res = await fetch("http://localhost:8000/upload", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+
+      uploadedFilePath = data.path; // save path
+      // addMessage("📷 Predicting disease on this image", "user");
+      const input = document.getElementById("userInput");
+      input.value = "Predict plant disease"
+      _messages.push({ role: "user", content: "Predict plant disease", file_path: uploadedFilePath });
+      sendMessage()
+
+    } catch (err) {
+      addMessage("⚠️ File upload failed", "ai");
+    }
+  });
+
+  async function sendMessage() {
+    const input = document.getElementById("userInput");
+    const userText = input.value.trim();
+
+    if (!userText && !uploadedFilePath) return;
+
+    addMessage(userText || "📷 Image sent", "user");
+    input.value = "";
+
+    _messages.push({ role: "user", content: userText });
+
+    const typingMsg = addMessage("Thinking...", "ai", true);
+
+    try {
+      const response = await fetch("http://localhost:8001", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          query: userText,
+          messages: _messages,
+          file_path: uploadedFilePath // 🔥 send reference instead of file
+        })
+      });
+
+      const data = await response.json();
+
+      typingMsg.remove();
+      addMessage(data.response, "ai");
+
+      _messages.push({ role: "assistant", content: data.response });
+
+      // Reset after sending
+      selectedFile = null;
+      uploadedFilePath = null;
+      previewContainer.style.display = "none";
+      fileInput.value = "";
+
+    } catch (error) {
+      typingMsg.remove();
+      addMessage("⚠️ Server error. Please try again.", "ai");
+    }
+  }
+
+  document.getElementById("userInput")
+    .addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    });
+</script>
+
+</body>
+</html>

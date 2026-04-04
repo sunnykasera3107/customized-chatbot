@@ -1,0 +1,5 @@
+kagglehub
+tensorflow[standard]
+keras[standard]
+numpy
+pillow
