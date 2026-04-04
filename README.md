@@ -40,7 +40,7 @@ Instead of relying only on LLM knowledge, the chatbot intelligently calls extern
 
 -   **Docker**
 -   **Docker Compose**
--   **Python 3.13**
+-   **Python 3.13 & 3.14**
 -   **Groq API Keys**
 ## Installation
 
@@ -75,3 +75,9 @@ Install customized-chatbot with docker
   docker compose up --build
 ```
 - **Run locally** by using this local url http://localhost:8000
+## 👨‍💻 Author
+
+**Sunny Kasera**
+
+- LinkedIn: https://www.linkedin.com/in/sunnykasera/
+- GitHub: https://github.com/sunnykasera3107
