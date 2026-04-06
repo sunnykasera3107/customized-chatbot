@@ -50,27 +50,10 @@ Install customized-chatbot with docker
 -   **Navigate** to the project directory.
 ```bash
   cd customized-chatbot
-  
 ```
 -   **Put Groq API Key** in .env file currently it has dummy api key
 
 -   **Build and run**
-```bash
-  docker compose up --build
-```
-## Installation
-
-Install customized-chatbot with docker
-
--   **Extract** the project folder after cloning it.
--   **Navigate** to the project directory.
-```bash
-  cd customized-chatbot
-  
-```
--   **Put Groq API Key** in .env file currently it has dummy api key
-
--   **Build and initiate all services**
 ```bash
   docker compose up --build
 ```
